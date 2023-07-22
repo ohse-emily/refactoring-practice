@@ -5,9 +5,13 @@ export function statement(invoice, plays) {
   const format = new Intl.NumberFormat('en-US',
     { style: 'currency', currency: 'USD', minimumFractionDigits: 2}).format;
 
-  function amountFor(aPerformance, play) {
+  function playFor(aPerformance) {
+    return plays[aPerformance.playID];
+  }
+
+  function amountFor(aPerformance) {
     let result = 0;
-    switch(play.type) {
+    switch(playFor(aPerformance).type) {
       case 'tragedy':
         result = 40000;
         if (aPerformance.audience > 30) {
@@ -28,15 +32,12 @@ export function statement(invoice, plays) {
   }
 
   for (let perf of invoice.performances) {
-    const play = plays[perf.playID];
-    let thisAmount = amountFor(perf, play);
-
-
+    let thisAmount = amountFor(perf);
 
     volumeCredits += Math.max(perf.audience - 30, 0);
-    if ('comedy' === play.type) volumeCredits += Math.floor(perf.audience / 5);
+    if ('comedy' === playFor(perf).type) volumeCredits += Math.floor(perf.audience / 5);
 
-    result += `${play.name}: ${format(thisAmount/100)} (${perf.audience}석)\n`;
+    result += `${playFor(perf).name}: ${format(thisAmount/100)} (${perf.audience}석)\n`;
     totalAmount += thisAmount;
   }
   result += `총액: ${format(totalAmount/100)}\n`
