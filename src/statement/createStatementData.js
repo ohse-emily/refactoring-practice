@@ -40,7 +40,7 @@ export default function createStatementData(invoice, plays) {
     const calculator = new PerformanceCalculator(aPerformance, playFor(aPerformance));
     const result = JSON.parse(JSON.stringify(aPerformance));
     result.play = calculator.play;
-    result.amount = amountFor(result);
+    result.amount = calculator.amount;
     result.volumeCredits = volumeCreditsFor(result);
     return result;
   }
